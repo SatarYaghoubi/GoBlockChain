@@ -36,6 +36,9 @@ Before you begin, ensure you have met the following requirements:
    ```bash
    git clone https://github.com/SatarYaghoubi/GoBlockchain.git
    cd GoBlockchain
+   nano the main.go
+   configure the database
+   and use you own secretkey
    go run main.go
 
 # Blockchain Usage Guide
