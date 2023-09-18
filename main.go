@@ -22,13 +22,9 @@ type Block struct {
 	Miner     string
 	Reward    float64
 }
-
-
 var Blockchain []Block
 
-
 const APIKey = "your_secret_key"
-
 
 const (
 	MongoDBHost = "localhost:27017"
@@ -36,9 +32,7 @@ const (
 	BlockchainCollection = "blocks"
 )
 
-
 var session *mgo.Session
-
 
 type Vote struct {
 	ID        bson.ObjectId `bson:"_id"`
@@ -47,7 +41,6 @@ type Vote struct {
 	Approved  bool          `json:"approved"`
 	Timestamp string        `json:"timestamp"`
 }
-
 // calculateHash calculates the hash of a block based on its index, timestamp, data, and the previous block's hash.
 func calculateHash(block Block) string {
 	data := fmt.Sprintf("%d%s%s%s%s", block.Index, block.Timestamp, block.Data, block.PrevHash, block.Miner)
@@ -68,7 +61,6 @@ func createNewBlock(prevBlock Block, data string, miner string, reward float64) 
 	newBlock.Hash = calculateHash(newBlock)
 	return newBlock
 }
-
 // Initialize MongoDB session
 func initMongoDB() {
 	var err error
@@ -92,11 +84,8 @@ func main() {
 		}
 		ctx.Next()
 	}
-
-	// Initialize MongoDB session.
 	initMongoDB()
-
-	// Retrieve the blockchain from MongoDB on application start.
+	
 	session.DB(DBName).C(BlockchainCollection).Find(nil).Sort("index").All(&Blockchain)
 
 	// Create and add new blocks to the blockchain.
@@ -169,13 +158,11 @@ func main() {
 			Voter      string        `json:"voter"`
 			Approve    bool          `json:"approve"`
 		}
-
 		if err := ctx.ReadJSON(&voteData); err != nil {
 			ctx.StatusCode(iris.StatusBadRequest)
 			ctx.JSON(iris.Map{"error": "Invalid request body"})
 			return
 		}
-
 		// Check if the proposal exists.
 		var proposal Vote
 		collection := session.DB(DBName).C("proposals")
@@ -185,14 +172,12 @@ func main() {
 			ctx.JSON(iris.Map{"error": "Proposal not found"})
 			return
 		}
-
 		// Check if the voter has already voted on this proposal.
 		if proposal.Voter != "" {
 			ctx.StatusCode(iris.StatusConflict)
 			ctx.JSON(iris.Map{"error": "You've already voted on this proposal"})
 			return
 		}
-
 		// Update the proposal with the voter's decision.
 		proposal.Voter = voteData.Voter
 		proposal.Approved = voteData.Approve
@@ -204,7 +189,6 @@ func main() {
 			ctx.JSON(iris.Map{"error": "Failed to update proposal"})
 			return
 		}
-
 		ctx.JSON(iris.Map{"message": "Vote recorded successfully"})
 	})
 
