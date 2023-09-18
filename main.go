@@ -6,12 +6,10 @@ import (
 	"fmt"
 	"log"
 	"time"
-
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
 	"github.com/kataras/iris/v12"
 )
-
 
 type Block struct {
 	Index     int
@@ -191,7 +189,5 @@ func main() {
 		}
 		ctx.JSON(iris.Map{"message": "Vote recorded successfully"})
 	})
-
-	// Run the Iris application on port 8080.
 	app.Run(iris.Addr(":8080"))
 }
